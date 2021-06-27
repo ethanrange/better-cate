@@ -63,9 +63,16 @@ ipcMain.on('request-accounts', (event, ...args) => {
     creds = keytar.findCredentials(serviceName);
     creds.then((credentials) => {
         let accounts = credentials.map(x => x.account);
-        console.log(accounts);
 
         event.sender.send('request-accounts', accounts);
+    })
+})
+
+ipcMain.on('request-deletion', (event, id) => {
+    let deletion = keytar.deletePassword(serviceName, id);
+
+    deletion.then((success) => {
+        event.sender.send('request-deletion', success, id);
     })
 })
 

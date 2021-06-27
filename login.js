@@ -1,3 +1,10 @@
+// Create object from HTML string
+function parseHTML(html) {
+    var template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content;
+}
+
 function handleCredentials() {
     // Create the browser window.
     uname = document.forms["loginForm"]["uname"].value
@@ -21,7 +28,34 @@ function insertAccounts(accounts) {
 
         ul.appendChild(li);
 
-        li.innerHTML = '<span class="user"><i class="fas fa-user user-icon"></i></span><span>' + item +
-            '</span><span class="delete"><button><i class="fas fa-window-close delete-icon"></i></button></span>'
+        let user = parseHTML('<span class="user"><i class="fas fa-user user-icon"></i></span>');
+
+        let del = document.createElement('span');
+        let button = document.createElement('button');
+
+        button.onclick = function() { requestDeletion(item); };
+        button.appendChild(parseHTML('<i class="fas fa-window-close delete-icon"></i>'))
+
+        del.className = 'delete';
+        del.appendChild(button);
+
+        let item_object = parseHTML('<span>' + item + '</span>');
+
+        li.appendChild(user);
+        li.appendChild(item_object);
+        li.appendChild(del);
     });
+}
+
+function requestDeletion(id) {
+    window.api.send('request-deletion', id);
+    window.api.receive('request-deletion', handleDeletion);
+}
+
+function handleDeletion(success, id) {
+    if (success) {
+        document.getElementById(id).remove();
+    } else {
+        alert("Failed to remove account");
+    }
 }
