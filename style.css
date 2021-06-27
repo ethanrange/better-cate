@@ -78,6 +78,29 @@ form .btn:active {
     color: #777;
 }
 
+#accounts {
+    text-align: center;
+    margin: auto;
+    padding: 0;
+}
+
+#accounts button {
+    padding: 12px 0;
+    margin: 0 auto 10px;
+    border-radius: 3px;
+    border: 2px solid transparent;
+    width: 90%;
+    font-size: 16px;
+    text-align: left;
+    transition: border .2s, background-color .2s;
+    background-color: #ECF0F1;
+}
+
+button i {
+    float: left;
+    padding: 0 12px;
+}
+
 .row {
     display: flex;
     height: 100%;
