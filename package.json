@@ -1,0 +1,17 @@
+{
+    "name": "better-cate",
+    "version": "1.0.0",
+    "description": "A better version of CATe",
+    "main": "app.js",
+    "author": "Ethan Range",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^13.1.4"
+    },
+    "scripts": {
+        "start": "electron ."
+    },
+    "dependencies": {
+        "keytar": "^7.7.0"
+    }
+}
