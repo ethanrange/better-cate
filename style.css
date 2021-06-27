@@ -130,3 +130,10 @@ li i {
 #accounts button i {
     padding: 0;
 }
+
+
+/* Hide scrollbar */
+
+::-webkit-scrollbar {
+    display: none;
+}

@@ -60,16 +60,13 @@ ipcMain.on('store-creds', (event, uname, pwd) => {
 })
 
 ipcMain.on('request-accounts', (event, ...args) => {
-    let accounts = [
-        'Blue',
-        'Red',
-        'White',
-        'Green',
-        'Black',
-        'Orange'
-    ]
+    creds = keytar.findCredentials(serviceName);
+    creds.then((credentials) => {
+        let accounts = credentials.map(x => x.account);
+        console.log(accounts);
 
-    event.sender.send('request-accounts', accounts);
+        event.sender.send('request-accounts', accounts);
+    })
 })
 
 /* ===================================================
