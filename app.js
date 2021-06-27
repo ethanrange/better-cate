@@ -4,6 +4,7 @@ const keytar = require('keytar')
 const serviceName = 'BetterCATe'
 
 let mainWindow;
+let username;
 
 /* ===================================================
  * App listeners
@@ -43,10 +44,14 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     creds = keytar.findCredentials(serviceName);
     creds.then((result) => {
         if (result.length) {
-            callback(result[0].account, result[0].password);
+            let account;
+
+            // Use selected username if present
+            account = username ? result.find(acc => acc.account === username) : result[0];
+
+            callback(account.account, account.password);
         } else {
             console.log("No account exists! Please restart the program.");
-            app.restart();
         }
     })
 });
@@ -76,6 +81,11 @@ ipcMain.on('request-deletion', (event, id) => {
     })
 })
 
+ipcMain.on('attempt-login', (event, id) => {
+    username = id;
+    attemptLogin();
+})
+
 /* ===================================================
  * Functions
  * =================================================== */
@@ -83,6 +93,7 @@ ipcMain.on('request-deletion', (event, id) => {
 function storeCredentials(uname, pwd) {
     if (uname && pwd) {
         keytar.setPassword(serviceName, uname, pwd);
+        username = uname;
         attemptLogin();
     }
 }

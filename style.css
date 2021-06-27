@@ -80,7 +80,7 @@ form .btn:active {
 }
 
 #accounts li {
-    display: table;
+    display: flex;
     padding: 8px 0;
     margin: 0 auto 10px;
     border-radius: 3px;
@@ -91,14 +91,10 @@ form .btn:active {
     background-color: #ECF0F1;
 }
 
-li i {
-    float: left;
-    padding: 0 12px;
-}
-
 #accounts span {
-    display: table-cell;
-    vertical-align: middle;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user-icon {
@@ -114,21 +110,34 @@ li i {
     width: 50px;
 }
 
+.delete {
+    margin-left: auto;
+}
+
 #accounts button {
     all: initial;
     margin: 0 12px;
-    float: right;
-    color: red;
     cursor: pointer;
+    vertical-align: middle;
 }
 
-#accounts button:hover,
-#accounts button:active {
+#accounts .delete button {
+    float: right;
+    color: red;
+    height: 30px;
+}
+
+#accounts .delete button:hover,
+#accounts .delete button:active {
     color: rgb(220, 0, 0);
 }
 
 #accounts button i {
     padding: 0;
+}
+
+#accounts .user button i {
+    float: left;
 }
 
 

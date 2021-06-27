@@ -28,16 +28,23 @@ function insertAccounts(accounts) {
 
         ul.appendChild(li);
 
-        let user = parseHTML('<span class="user"><i class="fas fa-user user-icon"></i></span>');
+        let user = document.createElement('span');
+        let userButton = document.createElement('button');
+
+        userButton.onclick = function() { selectLogin(item); };
+        userButton.appendChild(parseHTML('<i class="fas fa-user user-icon"></i>'))
+
+        user.className = 'user';
+        user.appendChild(userButton);
 
         let del = document.createElement('span');
-        let button = document.createElement('button');
+        let delButton = document.createElement('button');
 
-        button.onclick = function() { requestDeletion(item); };
-        button.appendChild(parseHTML('<i class="fas fa-window-close delete-icon"></i>'))
+        delButton.onclick = function() { requestDeletion(item); };
+        delButton.appendChild(parseHTML('<i class="fas fa-window-close delete-icon"></i>'))
 
         del.className = 'delete';
-        del.appendChild(button);
+        del.appendChild(delButton);
 
         let item_object = parseHTML('<span>' + item + '</span>');
 
@@ -58,4 +65,8 @@ function handleDeletion(success, id) {
     } else {
         alert("Failed to remove account");
     }
+}
+
+function selectLogin(id) {
+    window.api.send('attempt-login', id);
 }
