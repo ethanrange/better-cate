@@ -1,7 +1,16 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const keytar = require('keytar')
 
 const serviceName = 'BetterCATe'
+
+const menuTemplate = [{
+    label: 'BetterCATe',
+    submenu: [{
+        label: 'Manage Accounts',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Shift+A' : 'Ctrl+Shift+A',
+        click: function() { attemptSignup(); }
+    }]
+}]
 
 let mainWindow;
 let username;
@@ -11,18 +20,6 @@ let username;
  * =================================================== */
 
 app.on('ready', function() {
-    mainWindow = new BrowserWindow({
-        width: 640,
-        height: 720,
-        webPreferences: {
-            contextIsolation: true,
-            enableRemoteModule: false,
-            preload: `${__dirname}/preload.js`
-        },
-        show: false,
-        frame: false
-    })
-
     // Perform sign up if no credentials found
     creds = keytar.findCredentials(serviceName);
     creds.then((result) => {
@@ -32,10 +29,6 @@ app.on('ready', function() {
             attemptSignup();
             // attemptLogin();
         }
-    })
-
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
     })
 })
 
@@ -117,7 +110,9 @@ function storeCredentials(uname, pwd) {
 }
 
 function attemptLogin() {
-    mainWindow.hide();
+    if (mainWindow) {
+        mainWindow.hide();
+    }
 
     // Switch to 16:9, framed window
     mainWindow = new BrowserWindow({
@@ -131,7 +126,9 @@ function attemptLogin() {
         show: false
     })
 
-    mainWindow.setMenu(null);
+    let menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(menu);
+
     mainWindow.loadURL("https://cate.doc.ic.ac.uk")
 
     mainWindow.once('ready-to-show', () => {
@@ -140,5 +137,25 @@ function attemptLogin() {
 }
 
 function attemptSignup() {
+    if (mainWindow) {
+        mainWindow.hide();
+    }
+
+    mainWindow = new BrowserWindow({
+        width: 640,
+        height: 720,
+        webPreferences: {
+            contextIsolation: true,
+            enableRemoteModule: false,
+            preload: `${__dirname}/preload.js`
+        },
+        show: false,
+        frame: false
+    })
+
     mainWindow.loadFile("login.html")
+
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    })
 }
