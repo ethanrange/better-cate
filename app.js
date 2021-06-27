@@ -19,7 +19,8 @@ app.on('ready', function() {
             enableRemoteModule: false,
             preload: `${__dirname}/preload.js`
         },
-        show: false
+        show: false,
+        frame: false
     })
 
     // Perform sign up if no credentials found
@@ -86,6 +87,23 @@ ipcMain.on('attempt-login', (event, id) => {
     attemptLogin();
 })
 
+ipcMain.on('handle-titlebar', (event, id) => {
+    switch (id) {
+        case 'min-button':
+            mainWindow.minimize();
+            break;
+        case 'max-button':
+            mainWindow.maximize();
+            break;
+        case 'restore-button':
+            mainWindow.restore();
+            break;
+        case 'close-button':
+            mainWindow.close();
+            break;
+    }
+})
+
 /* ===================================================
  * Functions
  * =================================================== */
@@ -99,20 +117,26 @@ function storeCredentials(uname, pwd) {
 }
 
 function attemptLogin() {
-    // Switch to 16:9
     mainWindow.hide();
-    mainWindow.setSize(1280, mainWindow.getSize()[1]);
 
+    // Switch to 16:9, framed window
+    mainWindow = new BrowserWindow({
+        width: 1280,
+        height: 720,
+        webPreferences: {
+            contextIsolation: true,
+            enableRemoteModule: false,
+            preload: `${__dirname}/preload.js`
+        },
+        show: false
+    })
+
+    mainWindow.setMenu(null);
     mainWindow.loadURL("https://cate.doc.ic.ac.uk")
 
-
-    // Work around for redirect
-    mainWindow.webContents.once('dom-ready', function() {
-        // Recenter window
-        mainWindow.center();
-
-        mainWindow.show()
-    });
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    })
 }
 
 function attemptSignup() {

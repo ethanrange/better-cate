@@ -70,3 +70,15 @@ function handleDeletion(success, id) {
 function selectLogin(id) {
     window.api.send('attempt-login', id);
 }
+
+function handleTitlebar(id) {
+    window.api.send('handle-titlebar', id);
+
+    if (id === "max-button" || id === "restore-button") {
+        if (document.body.classList.contains('maximized')) {
+            document.body.classList.remove('maximized')
+        } else {
+            document.body.classList.add('maximized');
+        }
+    }
+}

@@ -4,26 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="title_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="login.js"></script>
     <title>Better CATe</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Login</h1>
-        <form id="loginForm" action="javascript:;" onsubmit=handleCredentials()>
-            <input name="uname" type="text" placeholder="username" class="field">
-            <input name="pwd" type="password" placeholder="password" class="field">
-            <input type="submit" value="login" class="btn">
-        </form>
-    </div>
-    <div class="container">
-        <h1>Stored accounts:</h1>
-        <div id="accounts"></div>
-        <script>
-            makeAccountList();
-        </script>
+    <header id="titlebar">
+        <div id="drag-region">
+            <div id="window-title">
+                <span>Better CATe</span>
+            </div>
+
+            <div id="window-controls">
+                <div class="button" id="min-button" onclick="handleTitlebar(id)">
+                    <img class="icon" srcset="title_icons/min-w-10.png 1x, title_icons/min-w-12.png 1.25x, title_icons/min-w-15.png 1.5x, title_icons/min-w-15.png 1.75x, title_icons/min-w-20.png 2x, title_icons/min-w-20.png 2.25x, title_icons/min-w-24.png 2.5x, title_icons/min-w-30.png 3x, title_icons/min-w-30.png 3.5x"
+                        draggable="false" />
+                </div>
+
+                <div class="button" id="max-button" onclick="handleTitlebar(id)">
+                    <img class="icon" srcset="title_icons/max-w-10.png 1x, title_icons/max-w-12.png 1.25x, title_icons/max-w-15.png 1.5x, title_icons/max-w-15.png 1.75x, title_icons/max-w-20.png 2x, title_icons/max-w-20.png 2.25x, title_icons/max-w-24.png 2.5x, title_icons/max-w-30.png 3x, title_icons/max-w-30.png 3.5x"
+                        draggable="false" />
+                </div>
+
+                <div class="button" id="restore-button" onclick="handleTitlebar(id)">
+                    <img class="icon" srcset="title_icons/restore-w-10.png 1x, title_icons/restore-w-12.png 1.25x, title_icons/restore-w-15.png 1.5x, title_icons/restore-w-15.png 1.75x, title_icons/restore-w-20.png 2x, title_icons/restore-w-20.png 2.25x, title_icons/restore-w-24.png 2.5x, title_icons/restore-w-30.png 3x, title_icons/restore-w-30.png 3.5x"
+                        draggable="false" />
+                </div>
+
+                <div class="button" id="close-button" onclick="handleTitlebar(id)">
+                    <img class="icon" srcset="title_icons/close-w-10.png 1x, title_icons/close-w-12.png 1.25x, title_icons/close-w-15.png 1.5x, title_icons/close-w-15.png 1.75x, title_icons/close-w-20.png 2x, title_icons/close-w-20.png 2.25x, title_icons/close-w-24.png 2.5x, title_icons/close-w-30.png 3x, title_icons/close-w-30.png 3.5x"
+                        draggable="false" />
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="main">
+        <div class="container">
+            <h1>Login</h1>
+            <form id="loginForm" action="javascript:;" onsubmit=handleCredentials()>
+                <input name="uname" type="text" placeholder="username" class="field">
+                <input name="pwd" type="password" placeholder="password" class="field">
+                <input type="submit" value="login" class="btn">
+            </form>
+        </div>
+        <div class="container">
+            <h1>Stored accounts:</h1>
+            <div id="accounts"></div>
+            <script>
+                makeAccountList();
+            </script>
+        </div>
     </div>
 </body>
 
