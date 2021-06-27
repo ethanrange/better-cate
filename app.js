@@ -1,8 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const keytar = require('keytar')
 
-const serviceName = 'BetterCATe'
-
 const menuTemplate = [{
     label: 'BetterCATe',
     submenu: [{
@@ -12,7 +10,8 @@ const menuTemplate = [{
     }]
 }]
 
-let mainWindow;
+let loginWin;
+let cateWin;
 let username;
 
 /* ===================================================
@@ -21,7 +20,7 @@ let username;
 
 app.on('ready', function() {
     // Perform sign up if no credentials found
-    creds = keytar.findCredentials(serviceName);
+    creds = keytar.findCredentials(app.name);
     creds.then((result) => {
         if (!result.length) {
             attemptSignup();
@@ -35,7 +34,7 @@ app.on('ready', function() {
 app.on('login', (event, webContents, request, authInfo, callback) => {
     event.preventDefault();
 
-    creds = keytar.findCredentials(serviceName);
+    creds = keytar.findCredentials(app.name);
     creds.then((result) => {
         if (result.length) {
             let account;
@@ -50,6 +49,10 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     })
 });
 
+app.on('window-all-closed', function() {
+    app.quit()
+})
+
 /* ===================================================
  * IPC listeners
  * =================================================== */
@@ -59,7 +62,7 @@ ipcMain.on('store-creds', (event, uname, pwd) => {
 })
 
 ipcMain.on('request-accounts', (event, ...args) => {
-    creds = keytar.findCredentials(serviceName);
+    creds = keytar.findCredentials(app.name);
     creds.then((credentials) => {
         let accounts = credentials.map(x => x.account);
 
@@ -68,7 +71,7 @@ ipcMain.on('request-accounts', (event, ...args) => {
 })
 
 ipcMain.on('request-deletion', (event, id) => {
-    let deletion = keytar.deletePassword(serviceName, id);
+    let deletion = keytar.deletePassword(app.name, id);
 
     deletion.then((success) => {
         event.sender.send('request-deletion', success, id);
@@ -83,16 +86,16 @@ ipcMain.on('attempt-login', (event, id) => {
 ipcMain.on('handle-titlebar', (event, id) => {
     switch (id) {
         case 'min-button':
-            mainWindow.minimize();
+            loginWin.minimize();
             break;
         case 'max-button':
-            mainWindow.maximize();
+            loginWin.maximize();
             break;
         case 'restore-button':
-            mainWindow.restore();
+            loginWin.restore();
             break;
         case 'close-button':
-            mainWindow.close();
+            loginWin.close();
             break;
     }
 })
@@ -103,19 +106,15 @@ ipcMain.on('handle-titlebar', (event, id) => {
 
 function storeCredentials(uname, pwd) {
     if (uname && pwd) {
-        keytar.setPassword(serviceName, uname, pwd);
+        keytar.setPassword(app.name, uname, pwd);
         username = uname;
         attemptLogin();
     }
 }
 
 function attemptLogin() {
-    if (mainWindow) {
-        mainWindow.hide();
-    }
-
     // Switch to 16:9, framed window
-    mainWindow = new BrowserWindow({
+    cateWin = new BrowserWindow({
         width: 1280,
         height: 720,
         webPreferences: {
@@ -129,19 +128,19 @@ function attemptLogin() {
     let menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
-    mainWindow.loadURL("https://cate.doc.ic.ac.uk")
+    cateWin.loadURL("https://cate.doc.ic.ac.uk")
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
+    if (loginWin) {
+        loginWin.close();
+    }
+
+    cateWin.once('ready-to-show', () => {
+        cateWin.show();
     })
 }
 
 function attemptSignup() {
-    if (mainWindow) {
-        mainWindow.hide();
-    }
-
-    mainWindow = new BrowserWindow({
+    loginWin = new BrowserWindow({
         width: 640,
         height: 720,
         webPreferences: {
@@ -153,9 +152,13 @@ function attemptSignup() {
         frame: false
     })
 
-    mainWindow.loadFile("login.html")
+    loginWin.loadFile("login.html")
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
+    if (cateWin) {
+        cateWin.close();
+    }
+
+    loginWin.once('ready-to-show', () => {
+        loginWin.show();
     })
 }
