@@ -78,27 +78,62 @@ form .btn:active {
     color: #777;
 }
 
-#accounts {
-    text-align: center;
+#accounts ul {
+    list-style-type: none;
     margin: auto;
     padding: 0;
 }
 
-#accounts button {
-    padding: 12px 0;
+#accounts li {
+    display: table;
+    padding: 8px 0;
     margin: 0 auto 10px;
     border-radius: 3px;
     border: 2px solid transparent;
     width: 90%;
     font-size: 16px;
-    text-align: left;
     transition: border .2s, background-color .2s;
     background-color: #ECF0F1;
 }
 
-button i {
+li i {
     float: left;
     padding: 0 12px;
+}
+
+#accounts span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.user-icon {
+    font-size: 20px;
+}
+
+.delete-icon {
+    font-size: 30px;
+}
+
+.user,
+.delete {
+    width: 50px;
+}
+
+#accounts button {
+    all: initial;
+    margin: 0 12px;
+    float: right;
+    color: red;
+    cursor: pointer;
+}
+
+#accounts button:hover,
+#accounts button:active {
+    color: rgb(220, 0, 0);
+}
+
+#accounts button i {
+    padding: 0;
 }
 
 .row {

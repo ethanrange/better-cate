@@ -16,14 +16,16 @@ function makeAccountList() {
         'Orange'
     ]
 
+    ul = document.createElement('ul');
+    document.getElementById('accounts').appendChild(ul);
+
     items.forEach(function(item) {
-        let button = document.createElement('button');
-        button.id = item;
-        button.onclick = function() { alert(button.id); };
+        let li = document.createElement('li');
+        li.id = item;
 
-        accounts.appendChild(button);
+        ul.appendChild(li);
 
-        button.innerHTML += '<i class="fas fa-user"></i>';
-        button.innerHTML += item;
+        li.innerHTML = '<span class="user"><i class="fas fa-user user-icon"></i></span><span>' + item +
+            '</span><span class="delete"><button><i class="fas fa-window-close delete-icon"></i></button></span>'
     });
 }
