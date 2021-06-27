@@ -7,19 +7,15 @@ function handleCredentials() {
 }
 
 function makeAccountList() {
-    let items = [
-        'Blue',
-        'Red',
-        'White',
-        'Green',
-        'Black',
-        'Orange'
-    ]
+    window.api.send('request-accounts');
+    window.api.receive('request-accounts', insertAccounts);
+}
 
+function insertAccounts(accounts) {
     ul = document.createElement('ul');
     document.getElementById('accounts').appendChild(ul);
 
-    items.forEach(function(item) {
+    accounts.forEach(function(item) {
         let li = document.createElement('li');
         li.id = item;
 

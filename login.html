@@ -10,26 +10,20 @@
 </head>
 
 <body>
-    <div class="row">
-        <div class="column">
-            <div class="container">
-                <h1>Login</h1>
-                <form id="loginForm" action="javascript:;" onsubmit=handleCredentials()>
-                    <input name="uname" type="text" placeholder="username" class="field">
-                    <input name="pwd" type="password" placeholder="password" class="field">
-                    <input type="submit" value="login" class="btn">
-                </form>
-            </div>
-        </div>
-        <div class="column">
-            <div class="container">
-                <h1>Stored accounts:</h1>
-                <div id="accounts"></div>
-                <script>
-                    makeAccountList();
-                </script>
-            </div>
-        </div>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm" action="javascript:;" onsubmit=handleCredentials()>
+            <input name="uname" type="text" placeholder="username" class="field">
+            <input name="pwd" type="password" placeholder="password" class="field">
+            <input type="submit" value="login" class="btn">
+        </form>
+    </div>
+    <div class="container">
+        <h1>Stored accounts:</h1>
+        <div id="accounts"></div>
+        <script>
+            makeAccountList();
+        </script>
     </div>
 </body>
 

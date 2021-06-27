@@ -2,19 +2,14 @@
     box-sizing: border-box;
 }
 
-html {
-    height: 100%
-}
-
 body {
     background-color: #535758;
     font-family: "Arial", sans-serif;
     margin: 0;
-    height: 100%
 }
 
 .container {
-    margin: auto;
+    margin: 3% auto;
     padding: 10px;
     width: 90%;
     background-color: #fff;
@@ -134,14 +129,4 @@ li i {
 
 #accounts button i {
     padding: 0;
-}
-
-.row {
-    display: flex;
-    height: 100%;
-    align-items: center;
-}
-
-.column {
-    flex: 50%;
 }

@@ -4,7 +4,6 @@ const keytar = require('keytar')
 const serviceName = 'BetterCATe'
 
 let mainWindow;
-let username, password;
 
 /* ===================================================
  * App listeners
@@ -12,7 +11,7 @@ let username, password;
 
 app.on('ready', function() {
     mainWindow = new BrowserWindow({
-        width: 1280,
+        width: 640,
         height: 720,
         webPreferences: {
             contextIsolation: true,
@@ -34,7 +33,7 @@ app.on('ready', function() {
     })
 
     mainWindow.once('ready-to-show', () => {
-        mainWindow.show()
+        mainWindow.show();
     })
 })
 
@@ -60,6 +59,19 @@ ipcMain.on('store-creds', (event, uname, pwd) => {
     storeCredentials(uname, pwd);
 })
 
+ipcMain.on('request-accounts', (event, ...args) => {
+    let accounts = [
+        'Blue',
+        'Red',
+        'White',
+        'Green',
+        'Black',
+        'Orange'
+    ]
+
+    event.sender.send('request-accounts', accounts);
+})
+
 /* ===================================================
  * Functions
  * =================================================== */
@@ -72,7 +84,20 @@ function storeCredentials(uname, pwd) {
 }
 
 function attemptLogin() {
+    // Switch to 16:9
+    mainWindow.hide();
+    mainWindow.setSize(1280, mainWindow.getSize()[1]);
+
     mainWindow.loadURL("https://cate.doc.ic.ac.uk")
+
+
+    // Work around for redirect
+    mainWindow.webContents.once('dom-ready', function() {
+        // Recenter window
+        mainWindow.center();
+
+        mainWindow.show()
+    });
 }
 
 function attemptSignup() {
