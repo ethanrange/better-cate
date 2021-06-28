@@ -1,0 +1,15 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+table {
+    background-color: #eeeeee;
+}
+
+* {
+    font-family: "Arial", sans-serif;
+}
+
+* {
+    font-size: 15px;
+}

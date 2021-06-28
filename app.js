@@ -3,6 +3,7 @@ const keytar = require('keytar')
 
 const request = require('request');
 const scraper = require('./scrape_content');
+const fs = require('fs');
 
 const menuTemplate = [{
     label: 'BetterCATe',
@@ -13,11 +14,10 @@ const menuTemplate = [{
     }]
 }]
 
-let loginWin;
-let cateWin;
-let cateScrape;
-let username;
-let year;
+let loginWin, cateWin, cateScrape;
+let username, year;
+
+let cateStyle = fs.readFileSync('./cate.css', "utf-8");
 
 /* ===================================================
  * App listeners
@@ -30,8 +30,8 @@ app.on('ready', function() {
         if (!result.length) {
             attemptSignup();
         } else {
-            // attemptLogin();
-            attemptSignup();
+            attemptLogin();
+            // attemptSignup();
         }
     })
 })
@@ -163,10 +163,7 @@ function attemptLogin() {
     }
 
     cateScrape.webContents.on('dom-ready', () => {
-        cateScrape.webContents.insertCSS('::-webkit-scrollbar { display: none; }')
-        cateScrape.webContents.insertCSS('table {background-color: #eeeeee; }')
-        cateScrape.webContents.insertCSS('* { font-family: "Arial", sans-serif; }')
-        cateScrape.webContents.insertCSS('* { font-size: 15px; }')
+        cateScrape.webContents.insertCSS(cateStyle, 'utf8');
     })
 
     cateWin.once('ready-to-show', () => {
