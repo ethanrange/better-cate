@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, Menu, BrowserView } = require('electron');
 const keytar = require('keytar')
 
 const cheerio = require('cheerio');
+const request = require('request');
 
 const menuTemplate = [{
     label: 'BetterCATe',
@@ -38,18 +39,8 @@ app.on('ready', function() {
 app.on('login', (event, webContents, request, authInfo, callback) => {
     event.preventDefault();
 
-    creds = keytar.findCredentials(app.name);
-    creds.then((result) => {
-        if (result.length) {
-            let account;
-
-            // Use selected username if present
-            account = username ? result.find(acc => acc.account === username) : result[0];
-
-            callback(account.account, account.password);
-        } else {
-            console.log("No account exists! Please restart the program.");
-        }
+    getCredentials().then((account) => {
+        callback(account.account, account.password);
     })
 });
 
@@ -115,7 +106,8 @@ ipcMain.on('navigate-path', (event, path) => {
 
     console.log("Loading: https://cate.doc.ic.ac.uk/" + path);
 
-    cateScrape.webContents.loadURL("https://cate.doc.ic.ac.uk/" + path);
+    loadPage("https://cate.doc.ic.ac.uk/" + path);
+    // cateScrape.webContents.loadURL("https://cate.doc.ic.ac.uk/" + path);
 })
 
 /* ===================================================
@@ -163,12 +155,7 @@ function attemptLogin() {
         vertical: true
     })
 
-    cateScrape.webContents.loadURL('https://cate.doc.ic.ac.uk')
-
-    cateScrape.webContents.once('dom-ready', () => {
-        let urlString = cateScrape.webContents.getURL();
-        year = parseInt(urlString.split('=').pop().split(':')[0]);
-    })
+    loadPage('https://cate.doc.ic.ac.uk')
 
     if (loginWin) {
         loginWin.close();
@@ -176,15 +163,6 @@ function attemptLogin() {
 
     cateScrape.webContents.on('dom-ready', () => {
         cateScrape.webContents.insertCSS('::-webkit-scrollbar { display: none; }')
-            // console.log("Scrape fired");
-        cateScrape.webContents.executeJavaScript(`function gethtml () {
-            return new Promise((resolve, reject) => { resolve(document.documentElement.innerHTML); });
-            }
-            gethtml();`).then((html) => {
-
-            const $ = cheerio.load(html);
-            // console.log($.html());
-        })
     })
 
     cateWin.once('ready-to-show', () => {
@@ -214,4 +192,36 @@ function attemptSignup() {
     loginWin.once('ready-to-show', () => {
         loginWin.show();
     })
+}
+
+function loadPage(url) {
+    getCredentials().then((account) => {
+        request(url, function(error, response, body) {
+            if (!error) {
+                // Set year
+                let query = response.request.uri.query;
+                year = parseInt(query.split('=').pop().split(':')[0]);
+
+                // Load page into WindowView
+                cateScrape.webContents.loadURL("data:text/html;base64;charset=utf-8," + Buffer.from(body).toString('base64'));
+            }
+        }).auth(account.account, account.password);
+    })
+}
+
+function getCredentials() {
+    creds = keytar.findCredentials(app.name);
+
+    let account = creds.then((result) => {
+        if (result.length) {
+            // Use selected username if present
+            chosen_acc = username ? result.find(acc => acc.account === username) : result[0]
+
+            return chosen_acc;
+        } else {
+            console.log("No account exists! Please restart the program.");
+        }
+    })
+
+    return account;
 }
