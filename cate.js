@@ -1,34 +1,21 @@
 window.addEventListener('load', initHTML, false);
 
-let frame;
-
 function initHTML() {
-    // console.log(document.body);
-
-    // document.querySelectorAll('iframe').forEach(
-    //     function(elem) {
-    //         elem.parentNode.removeChild(elem);
-    //     });
-
-    // document.getElementsByTagName("table")[0].deleteRow(0);
-    // document.getElementsByTagName("table")[0].deleteRow(1);
-    // document.getElementsByTagName("table")[0].deleteRow(1);
-
-    frame = document.getElementsByName("cateWindow")[0];
+    // frame = document.getElementsByName("cateWindow")[0];
 }
 
 function printYears() {
-    frame.src = "https://cate.doc.ic.ac.uk/personal.cgi?keyp=2019"
+    window.api.send('navigate-path', `personal.cgi?keyp=%YEAR%`);
 }
 
 function navigateTimetable() {
-    frame.src = "https://cate.doc.ic.ac.uk/timetable.cgi?period=6&class=c1&keyt=2020:none:none:blank"
+    window.api.send('navigate-path', "timetable.cgi?period=6&class=c1&keyt=%YEAR%:none:none:%NAME%");
 }
 
 function navigateGrades() {
-    frame.src = "https://cate.doc.ic.ac.uk/student.cgi?key=2020"
+    window.api.send('navigate-path', "student.cgi?key=%YEAR%");
 }
 
 function navigateInfo() {
-    frame.src = "https://cate.doc.ic.ac.uk/personal.cgi?keyp=2020"
+    window.api.send('navigate-path', "personal.cgi?keyp=%YEAR%");
 }

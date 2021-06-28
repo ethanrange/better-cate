@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu, BrowserView } = require('electron');
 const keytar = require('keytar')
-const fs = require('fs')
+
+const cheerio = require('cheerio');
 
 const menuTemplate = [{
     label: 'BetterCATe',
@@ -13,7 +14,9 @@ const menuTemplate = [{
 
 let loginWin;
 let cateWin;
+let cateScrape;
 let username;
+let year;
 
 /* ===================================================
  * App listeners
@@ -26,7 +29,8 @@ app.on('ready', function() {
         if (!result.length) {
             attemptSignup();
         } else {
-            attemptLogin();
+            // attemptLogin();
+            attemptSignup();
         }
     })
 })
@@ -83,21 +87,35 @@ ipcMain.on('attempt-login', (event, id) => {
     attemptLogin();
 })
 
-ipcMain.on('handle-titlebar', (event, id) => {
-    switch (id) {
+// Todo: Refactor to array of functions
+ipcMain.on('handle-titlebar', (event, btnid, winid) => {
+    let window = [loginWin, cateWin][winid];
+
+    switch (btnid) {
         case 'min-button':
-            loginWin.minimize();
+            window.minimize();
             break;
         case 'max-button':
-            loginWin.maximize();
+            window.maximize();
             break;
         case 'restore-button':
-            loginWin.restore();
+            window.restore();
             break;
         case 'close-button':
-            loginWin.close();
+            window.close();
             break;
     }
+})
+
+ipcMain.on('navigate-path', (event, path) => {
+    // console.log("Leaving: " + cateScrape.webContents.getURL());
+
+    path = path.replace('%YEAR%', year);
+    path = path.replace('%NAME%', username);
+
+    console.log("Loading: https://cate.doc.ic.ac.uk/" + path);
+
+    cateScrape.webContents.loadURL("https://cate.doc.ic.ac.uk/" + path);
 })
 
 /* ===================================================
@@ -122,7 +140,8 @@ function attemptLogin() {
             enableRemoteModule: false,
             preload: `${__dirname}/preload.js`
         },
-        show: false
+        show: false,
+        frame: false
     })
 
     let menu = Menu.buildFromTemplate(menuTemplate);
@@ -131,33 +150,42 @@ function attemptLogin() {
     // cateWin.loadURL("https://cate.doc.ic.ac.uk")
     cateWin.loadFile('./cate-page.html');
 
-    // const view = new BrowserView({
-    //     webPreferences: {
-    //         devTools: true,
-    //         contextIsolation: true,
-    //         preload: require('path').resolve(__dirname, 'cate.js')
-    //     }
-    // });
+    cateScrape = new BrowserView({
+        webPreferences: {
+            contextIsolation: true,
+        }
+    });
 
-    // cateWin.setBrowserView(view);
-    // view.setBounds({ x: 0, y: 0, width: 300, height: 300 });
-    // view.webContents.loadURL('https://cate.doc.ic.ac.uk')
+    cateWin.setBrowserView(cateScrape);
+    cateScrape.setBounds({ x: 70, y: 150, width: 1140, height: 550 });
+    cateScrape.setAutoResize({
+        horizontal: true,
+        vertical: true
+    })
+
+    cateScrape.webContents.loadURL('https://cate.doc.ic.ac.uk')
+
+    cateScrape.webContents.once('dom-ready', () => {
+        let urlString = cateScrape.webContents.getURL();
+        year = parseInt(urlString.split('=').pop().split(':')[0]);
+    })
 
     if (loginWin) {
         loginWin.close();
     }
 
-    // cateWin.webContents.once('dom-ready', () => {
-    //     //     //     // cateWin.webContents.executeJavaScript('document.getElementsByTagName("link")[1].remove()');
-    //     //     //     // cateWin.webContents.executeJavaScript("window.api.send('send-html', document.body.innerHTML);");
-    //     //     //     // console.log(cateWin.webContents.get);
-    //     //     //     // cateWin.webContents.insertCSS(fs.readFileSync('./cate-improved.css', 'utf8'));
-    //     //     cateWin.webContents.executeJavaScript('document.head.innerHTML += "<script src=\'./cate.js\'></script>"').then((result) => {
-    //     //         console.log(result)
-    //     //     })
+    cateScrape.webContents.on('dom-ready', () => {
+        cateScrape.webContents.insertCSS('::-webkit-scrollbar { display: none; }')
+            // console.log("Scrape fired");
+        cateScrape.webContents.executeJavaScript(`function gethtml () {
+            return new Promise((resolve, reject) => { resolve(document.documentElement.innerHTML); });
+            }
+            gethtml();`).then((html) => {
 
-    //     //     cateWin.webContents.executeJavaScript('initHTML();').then((result) => { console.log(result) })
-    // })
+            const $ = cheerio.load(html);
+            // console.log($.html());
+        })
+    })
 
     cateWin.once('ready-to-show', () => {
         cateWin.show();
