@@ -1,8 +1,8 @@
 const { app, BrowserWindow, ipcMain, Menu, BrowserView } = require('electron');
 const keytar = require('keytar')
 
-const cheerio = require('cheerio');
 const request = require('request');
+const scraper = require('./scrape_content');
 
 const menuTemplate = [{
     label: 'BetterCATe',
@@ -145,6 +145,7 @@ function attemptLogin() {
     cateScrape = new BrowserView({
         webPreferences: {
             contextIsolation: true,
+            devTools: true
         }
     });
 
@@ -163,10 +164,14 @@ function attemptLogin() {
 
     cateScrape.webContents.on('dom-ready', () => {
         cateScrape.webContents.insertCSS('::-webkit-scrollbar { display: none; }')
+        cateScrape.webContents.insertCSS('table {background-color: #eeeeee; }')
+        cateScrape.webContents.insertCSS('* { font-family: "Arial", sans-serif; }')
+        cateScrape.webContents.insertCSS('* { font-size: 15px; }')
     })
 
     cateWin.once('ready-to-show', () => {
         cateWin.show();
+        // cateScrape.webContents.openDevTools();
     })
 }
 
@@ -202,8 +207,17 @@ function loadPage(url) {
                 let query = response.request.uri.query;
                 year = parseInt(query.split('=').pop().split(':')[0]);
 
+                let pathname = response.request.uri.pathname;
+                let page = pathname.substring(1).split('.')[0];
+
+                let modified = scraper.scrape(body, page);
+
+                if (!modified) {
+                    modified = body;
+                }
+
                 // Load page into WindowView
-                cateScrape.webContents.loadURL("data:text/html;base64;charset=utf-8," + Buffer.from(body).toString('base64'));
+                cateScrape.webContents.loadURL("data:text/html;base64;charset=utf-8," + Buffer.from(modified).toString('base64'));
             }
         }).auth(account.account, account.password);
     })
