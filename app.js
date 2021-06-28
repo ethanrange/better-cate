@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, BrowserView } = require('electron');
 const keytar = require('keytar')
+const fs = require('fs')
 
 const menuTemplate = [{
     label: 'BetterCATe',
@@ -25,8 +26,7 @@ app.on('ready', function() {
         if (!result.length) {
             attemptSignup();
         } else {
-            attemptSignup();
-            // attemptLogin();
+            attemptLogin();
         }
     })
 })
@@ -128,11 +128,36 @@ function attemptLogin() {
     let menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
-    cateWin.loadURL("https://cate.doc.ic.ac.uk")
+    // cateWin.loadURL("https://cate.doc.ic.ac.uk")
+    cateWin.loadFile('./cate-page.html');
+
+    // const view = new BrowserView({
+    //     webPreferences: {
+    //         devTools: true,
+    //         contextIsolation: true,
+    //         preload: require('path').resolve(__dirname, 'cate.js')
+    //     }
+    // });
+
+    // cateWin.setBrowserView(view);
+    // view.setBounds({ x: 0, y: 0, width: 300, height: 300 });
+    // view.webContents.loadURL('https://cate.doc.ic.ac.uk')
 
     if (loginWin) {
         loginWin.close();
     }
+
+    // cateWin.webContents.once('dom-ready', () => {
+    //     //     //     // cateWin.webContents.executeJavaScript('document.getElementsByTagName("link")[1].remove()');
+    //     //     //     // cateWin.webContents.executeJavaScript("window.api.send('send-html', document.body.innerHTML);");
+    //     //     //     // console.log(cateWin.webContents.get);
+    //     //     //     // cateWin.webContents.insertCSS(fs.readFileSync('./cate-improved.css', 'utf8'));
+    //     //     cateWin.webContents.executeJavaScript('document.head.innerHTML += "<script src=\'./cate.js\'></script>"').then((result) => {
+    //     //         console.log(result)
+    //     //     })
+
+    //     //     cateWin.webContents.executeJavaScript('initHTML();').then((result) => { console.log(result) })
+    // })
 
     cateWin.once('ready-to-show', () => {
         cateWin.show();
