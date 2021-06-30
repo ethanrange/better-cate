@@ -2,7 +2,8 @@ const { app, BrowserWindow, ipcMain, Menu, BrowserView, screen } = require('elec
 const keytar = require('keytar')
 
 const request = require('request');
-const scraper = require('./scrape_content');
+const path = require('path');
+const scraper = require('./scrape_content.js');
 const fs = require('fs');
 
 const menuTemplate = [{
@@ -17,7 +18,7 @@ const menuTemplate = [{
 let loginWin, cateWin, cateScrape;
 let username, year, period, group, currUrl;
 
-let cateStyle = fs.readFileSync('./cate.css', "utf-8");
+let cateStyle = fs.readFileSync(path.join(path.dirname(__dirname), 'renderer', 'stylesheets', 'cate.css'), "utf-8");
 
 /* ===================================================
  * App listeners
@@ -127,6 +128,7 @@ function storeCredentials(uname, pwd) {
 }
 
 function attemptLogin() {
+    console.log(__dirname);
     // Switch to 16:9, framed window
     cateWin = new BrowserWindow({
         width: 1280,
@@ -134,7 +136,7 @@ function attemptLogin() {
         webPreferences: {
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: `${__dirname}/preload.js`
+            preload: path.join(path.dirname(__dirname), 'preload', 'preload.js')
         },
         show: false,
         frame: false
@@ -144,7 +146,8 @@ function attemptLogin() {
     Menu.setApplicationMenu(menu);
 
     // cateWin.loadURL("https://cate.doc.ic.ac.uk")
-    cateWin.loadFile('./cate-page.html');
+    console.log(path.join(path.dirname(__dirname), 'renderer', 'content', 'cate-page.html'));
+    cateWin.loadFile(path.join(path.dirname(__dirname), 'renderer', 'content', 'cate-page.html'));
 
     cateScrape = new BrowserView({
         webPreferences: {
@@ -192,7 +195,7 @@ function attemptLogin() {
     cateWin.once('ready-to-show', () => {
         cateWin.show();
         // cateScrape.webContents.openDevTools();
-        // cateWin.openDevTools();
+        cateWin.openDevTools();
     })
 
     const filter = {
@@ -213,13 +216,13 @@ function attemptSignup() {
         webPreferences: {
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: `${__dirname}/preload.js`
+            preload: path.join(path.dirname(__dirname), 'preload', 'preload.js')
         },
         show: false,
         frame: false
     })
 
-    loginWin.loadFile("login.html")
+    loginWin.loadFile(path.join(path.dirname(__dirname), 'renderer', 'content', 'login.html'))
 
     if (cateWin) {
         cateWin.close();
