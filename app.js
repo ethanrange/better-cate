@@ -171,9 +171,14 @@ function attemptLogin() {
         cateScrape.webContents.insertCSS(cateStyle, 'utf8');
     })
 
+    cateScrape.webContents.on('new-window', (event, url) => {
+        event.preventDefault();
+        loadPage(url);
+    })
+
     cateWin.once('ready-to-show', () => {
         cateWin.show();
-        cateScrape.webContents.openDevTools();
+        // cateScrape.webContents.openDevTools();
     })
 }
 
@@ -212,18 +217,22 @@ function loadPage(url) {
                 let pathname = response.request.uri.pathname;
                 let page = pathname.substring(1).split('.')[0];
 
-                [modified, foundPeriod, foundGroup] = scraper.scrape(body, page);
+                if (['student', 'timetable', 'personal'].includes(page)) {
+                    [modified, foundPeriod, foundGroup] = scraper.scrape(body, page);
 
-                if (foundPeriod) {
-                    period = foundPeriod;
+                    if (foundPeriod) {
+                        period = foundPeriod;
+                    }
+
+                    if (foundGroup) {
+                        group = foundGroup;
+                    }
+
+                    // Load page into WindowView
+                    cateScrape.webContents.loadURL("data:text/html;base64;charset=utf-8," + Buffer.from(modified).toString('base64'));
+                } else {
+                    cateScrape.webContents.loadURL(url);
                 }
-
-                if (foundGroup) {
-                    group = foundGroup;
-                }
-
-                // Load page into WindowView
-                cateScrape.webContents.loadURL("data:text/html;base64;charset=utf-8," + Buffer.from(modified).toString('base64'));
             }
         }).auth(account.account, account.password);
     })

@@ -4,8 +4,7 @@
 
 table {
     background-color: #eeeeee;
-    table-layout: fixed;
-    width: 100%;
+    table-layout: auto;
 }
 
 table * {
