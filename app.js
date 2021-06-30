@@ -15,7 +15,7 @@ const menuTemplate = [{
 }]
 
 let loginWin, cateWin, cateScrape;
-let username, year;
+let username, year, period, group;
 
 let cateStyle = fs.readFileSync('./cate.css', "utf-8");
 
@@ -30,6 +30,8 @@ app.on('ready', function() {
         if (!result.length) {
             attemptSignup();
         } else {
+            username = result[0].account;
+
             attemptLogin();
             // attemptSignup();
         }
@@ -103,6 +105,8 @@ ipcMain.on('navigate-path', (event, path) => {
 
     path = path.replace('%YEAR%', year);
     path = path.replace('%NAME%', username);
+    path = path.replace('%PERIOD%', period);
+    path = path.replace('%GROUP%', group);
 
     console.log("Loading: https://cate.doc.ic.ac.uk/" + path);
 
@@ -156,6 +160,7 @@ function attemptLogin() {
         vertical: true
     })
 
+    // cateScrape.webContents.loadURL("https://cate.doc.ic.ac.uk/");
     loadPage('https://cate.doc.ic.ac.uk')
 
     if (loginWin) {
@@ -168,7 +173,7 @@ function attemptLogin() {
 
     cateWin.once('ready-to-show', () => {
         cateWin.show();
-        // cateScrape.webContents.openDevTools();
+        cateScrape.webContents.openDevTools();
     })
 }
 
@@ -207,10 +212,14 @@ function loadPage(url) {
                 let pathname = response.request.uri.pathname;
                 let page = pathname.substring(1).split('.')[0];
 
-                let modified = scraper.scrape(body, page);
+                [modified, foundPeriod, foundGroup] = scraper.scrape(body, page);
 
-                if (!modified) {
-                    modified = body;
+                if (foundPeriod) {
+                    period = foundPeriod;
+                }
+
+                if (foundGroup) {
+                    group = foundGroup;
                 }
 
                 // Load page into WindowView

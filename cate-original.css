@@ -1,0 +1,473 @@
+body {
+    background: #e0f9f9;
+}
+
+.moduletitle {
+    color: blue;
+    font-weight: bold;
+}
+
+.blueboldtext {
+    color: blue;
+    font-weight: bold;
+}
+
+.greenboldtext {
+    color: green;
+    font-weight: bold;
+}
+
+.greenitaltext {
+    color: green;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.blueitalboldtext {
+    color: blue;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.boldtext {
+    color: black;
+    font-weight: bold;
+}
+
+.tablecollapse {
+    border-collapse: collapse;
+    background-color: #bbf9f9;
+    padding: 0 15px 0 15px;
+}
+
+.tableth {
+    border: 1px solid #5fcdcd;
+    padding: 2px 5px 0 5px;
+}
+
+.tablethr {
+    border: 1px solid #5fcdcd;
+    padding: 2px 5px 0 5px;
+    text-align: right;
+}
+
+.tabletd {
+    border: 1px solid #5fcdcd;
+    background-color: white;
+    padding: 2px 5px 0 5px;
+}
+
+.tabletdgrey {
+    border: 1px solid #5fcdcd;
+    background-color: #dddddd;
+    padding: 2px 5px 0 5px;
+}
+
+.tabletdw {
+    /*	border: 1px solid #5fcdcd; */
+    background-color: white;
+    text-align: center;
+    padding: 2px 5px 0 5px;
+}
+
+.tabletdalert {
+    border: 1px solid #ff0000;
+    background-color: #ffcccc;
+    text-align: center;
+    padding: 2px 5px 0 5px;
+}
+
+.tabletdlp {
+    border: 1px solid #5fcdcd;
+    background-color: white;
+    text-align: left;
+    padding-left: 2%;
+}
+
+.tabletdp {
+    border: 1px solid #5fcdcd;
+    background-color: white;
+    text-align: left;
+    padding: 5px 5px 5px 5px;
+}
+
+.tabletdc {
+    border: 1px solid #5fcdcd;
+    background-color: white;
+    text-align: center;
+    padding: 0 15px 0 15px;
+}
+
+.tabletdr {
+    border: 1px solid #5fcdcd;
+    background-color: white;
+    text-align: right;
+    padding: 0 15px 0 15px;
+}
+
+.tablestd_tdlp {
+    border: 1px solid #5fcdcd;
+    text-align: left;
+    padding-left: 2%;
+}
+
+.tablestd_tdc {
+    border: 1px solid #5fcdcd;
+    text-align: center;
+    padding: 0 5px 0 5px;
+}
+
+.greytd {
+    background-color: #eeeeee;
+}
+
+.tutorline {
+    background-color: #ddffdd;
+}
+
+.notutorline {
+    background-color: white;
+}
+
+.yellowbutton {
+    font-weight: bold;
+    border: solid 1px black;
+    background-color: #ffd600;
+    border-radius: 12px;
+}
+
+.redEbutton {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px 3px 1px 2px;
+    font-weight: bold;
+    border: solid 2px black;
+    background-color: #ffb3b3;
+    border-radius: 50%;
+}
+
+
+/*
+.yellowEbutton {
+
+	vertical-align: middle;
+	text-align: center;
+	padding: 0px 15px 0px 15px;
+	font-weight: bold;
+	border: solid 1px black;
+	background-color: #ffd600;
+	border-radius: 40%;
+
+}
+*/
+
+.yellowEbutton {
+    font-weight: bold;
+    border: solid 1px black;
+    background-color: #ffd600;
+    border-radius: 12px;
+}
+
+.redbutton {
+    font-weight: bold;
+    border: solid 1px black;
+    background-color: #eebdbd;
+    border-radius: 12px;
+}
+
+.greenbutton {
+    font-weight: bold;
+    border: solid 1px black;
+    background-color: #99d699;
+    border-radius: 12px;
+}
+
+.bluebutton {
+    color: yellow;
+    font-weight: bold;
+    /*	border: solid 1px black; */
+    background-color: #2fadf3;
+    border-radius: 12px;
+}
+
+.centerbutton {
+    display: table-cell;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.lockgreenbutton {
+    font-weight: bold;
+    border: solid 3px green;
+    background-color: #ffffaa;
+    border-radius: 12px;
+}
+
+.lockredbutton {
+    font-weight: bold;
+    border: solid 3px red;
+    background-color: #ffffaa;
+    border-radius: 12px;
+}
+
+.unlockbutton {
+    font-weight: bold;
+    border: solid 1px black;
+    background-color: #dfffdf;
+    border-radius: 12px;
+}
+
+.displaybutton {
+    font-weight: bold;
+    border: solid 3px blue;
+    background-color: white;
+    border-radius: 12px;
+}
+
+.lockdate {
+    font-weight: bold;
+    border: solid 1px blue;
+    background-color: #ffcccc;
+    border-radius: 12px;
+}
+
+.pastdate {
+    color: black;
+    font-weight: normal;
+}
+
+.nowdate {
+    color: red;
+    font-weight: bold;
+}
+
+.futuredate {
+    color: blue;
+    font-weight: bold;
+}
+
+.alert {
+    width: 40%;
+    padding: 5px;
+    border: 3px solid red;
+    background: white;
+}
+
+.alertweight {
+    padding: 1px;
+    border: 2px solid red;
+    background: yellow;
+}
+
+.okweight {
+    background: #bbf9f9;
+}
+
+.cellgrey1 {
+    text-align: center;
+    background-color: #dddddd;
+}
+
+.cellgrey2 {
+    text-align: center;
+    background-color: #eeeeee;
+}
+
+.cellwhite {
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.separator {
+    border-bottom: 2px solid blue;
+}
+
+.italicpercent {
+    color: black;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.catelgray {
+    background-color: #cdcdcd;
+}
+
+.categray {
+    background-color: #a4a4a4;
+}
+
+.catelyellow {
+    background-color: #ffffcc;
+}
+
+.cateyellow {
+    background-color: #ffff99;
+}
+
+.catelgreen {
+    background-color: #ccffcc;
+}
+
+.catelpurple {
+    background-color: #f0ccf0;
+}
+
+.categreen {
+    background-color: #a4ffa4;
+}
+
+.catepurple {
+    background-color: #f0a4f0;
+}
+
+.capped {
+    text-decoration: red double line-through;
+    font-weight: bold;
+}
+
+.currexamcode {
+    font-weight: bold;
+    background-color: #ffff99;
+    color: blue;
+    border: 1px solid #5fcdcd;
+}
+
+
+/*  
+	These declarations are to handle the coloring of the exercises boxes or
+	dates headers boxes  in the timetable of exercises  
+*/
+
+.box_bg_info {
+    background-color: white;
+    border: 2px solid blue;
+    border-radius: 15px;
+}
+
+.box_bg_dates {
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 0px;
+}
+
+.box_bg_tut {
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 10px;
+}
+
+.box_bg_submit {
+    background-color: #cdcdcd;
+    ;
+    border: 1px solid grey;
+    border-radius: 10px;
+}
+
+.box_bg_ind {
+    background-color: #ccffcc;
+    border: 1px solid #99cc99;
+    border-radius: 10px;
+}
+
+.box_bg_grp {
+    background-color: #ffccff;
+    border: 1px solid #dd99cc;
+    border-radius: 10px;
+}
+
+.box_bg_wes {
+    background-color: #ff9999;
+    border: 1px solid #cc6666;
+    border-radius: 10px;
+}
+
+.round_icon {
+    color: black;
+    text-align: center;
+    font-size: 90%;
+    font-weight: bold;
+    border: 1px black solid;
+    border-radius: 50%;
+    padding: 0px 0px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.4em;
+}
+
+.square_icon {
+    color: black;
+    text-align: center;
+    font-size: 90%;
+    font-weight: bold;
+    border: 1px black solid;
+    border-radius: 5px;
+    padding: 0px 0px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.4em;
+}
+
+.yellow_icon {
+    background: #ffcc00 !important;
+    background-color: #ffcc00 !important;
+}
+
+.orange_icon {
+    background: magenta !important;
+    background-color: magenta !important;
+}
+
+.red_icon {
+    background: red !important;
+    background-color: red !important;
+}
+
+.time_icon {
+    color: green;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 90%;
+    background: white;
+    border: black 1px solid;
+    padding: 0px 2px;
+    margin: 2px 2px 0px 2px;
+    border-radius: 6px;
+}
+
+.time_button {
+    color: green;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 70%;
+    background: white;
+    border: black 1px solid;
+    padding: 0px 2px;
+    margin: 2px 2px 0px 2px;
+    border-radius: 6px;
+}
+
+.e_mail {
+    color: blue;
+    font-style: italic;
+    font-weight: bold;
+    background: transparent;
+    text-decoration: none;
+    padding: 0px;
+}
+
+.notrequested {
+    color: grey;
+    text-decoration: black double line-through;
+}
+
+.requested {
+    color: green;
+    font-weight: bold;
+}
+
+.request_missing {
+    color: red;
+    font-weight: bold;
+}

@@ -4,12 +4,172 @@
 
 table {
     background-color: #eeeeee;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table * {
+    overflow: hidden;
 }
 
 * {
-    font-family: "Arial", sans-serif;
+    font-family: "Arial", sans-serif
 }
 
-* {
-    font-size: 15px;
+
+/* html {
+    width: 100wh;
 }
+
+a {
+    color: #1565C0;
+}
+
+body {
+    background: white;
+}
+
+body>center>table>tbody>tr>td:nth-child(3)>table>tbody>tr>td>a>img {
+    vertical-align: middle;
+}
+
+body>center>table>tbody>tr>td:nth-child(3)>table>tbody>tr:nth-child(1)>td>a>img {
+    margin-top: 2px;
+}
+
+body>table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+body>table td,
+body>table th {
+    border: 2px solid white;
+    box-sizing: border-box;
+}
+
+body>table tr:nth-child(n+8) td:nth-child(n+5) {
+    overflow-x: hidden;
+}
+
+body>table tr:nth-child(n+8) td:nth-child(n+5):hover {
+    overflow-x: visible;
+}
+
+body>table:nth-child(3)>tbody>tr>td:nth-child(1)>b>font:nth-child(1),
+body>table:nth-child(3)>tbody>tr:nth-child(5)>td:nth-child(1)>b>font:nth-child(1) {
+    display: none;
+}
+
+body>table:nth-child(3)>tbody>tr>td:nth-child(3)>a>font>b {
+    display: none;
+}
+
+body>table:nth-child(3)>tbody>tr>td:nth-child(3)>font>b {
+    display: none;
+}
+
+body>table:nth-child(3)>tbody>tr>td[bgcolor="#ccffcc"] {
+    background: #C5E1A5;
+    border-radius: 2px;
+}
+
+body>table:nth-child(3)>tbody>tr>td[bgcolor="#f0ccf0"] {
+    background: #F48FB1;
+    border-radius: 2px;
+}
+
+body>table:nth-child(3)>tbody>tr>td[bgcolor="white"][colspan] {
+    background: #f8f8f8;
+    border-radius: 2px;
+}
+
+body>table:nth-child(5)>tbody>tr>td:nth-child(2)>b {
+    visibility: hidden;
+}
+
+body>table:nth-child(5)>tbody>tr>td:nth-child(2)>b::after {
+    content: "CSS improvements by Kian Mayne";
+    visibility: visible;
+}
+
+body center ul {
+    display: none;
+}
+
+font[color="blue"] {
+    color: #2196F3;
+}
+
+font[color="red"] {
+    color: #F44336;
+}
+
+h1 font,
+h2 font {
+    color: black;
+}
+
+h1 font[color="blue"],
+h2 font[color="blue"] {
+    color: black;
+}
+
+html {
+    font-family: Calibri;
+}
+
+
+img {
+    display: none;
+}
+
+tbody tr:nth-child(11n+3) th:nth-child(n+2) {
+    background: #eee;
+}
+
+td[bgcolor="#8ef9f9"] {
+    background: #DDD;
+}
+
+td[bgcolor="#dddddd"] {
+    background: none;
+}
+
+td[bgcolor="#e0f9f9"] {
+    background: none;
+}
+
+td[bgcolor="LightSkyBlue"],
+th[bgcolor="LightSkyBlue"] {
+    background: #BDBDBD;
+}
+
+td[bgcolor="white"] {
+    background: none;
+}
+
+td[bgcolor="white"]:nth-child(-n+3) {
+    background: none;
+}
+
+th[bgcolor="white"] {
+    background: #eee;
+}
+
+tr td p {
+    display: none;
+}
+
+body>table:nth-child(3)>tbody>tr:nth-child(45)>td:nth-child(6),
+body>table:nth-child(3)>tbody>tr:nth-child(47)>td:nth-child(6),
+body>table:nth-child(3)>tbody>tr:nth-child(87)>td:nth-child(6) {
+    display: block;
+}
+
+body>table:nth-child(3)>tbody>tr:nth-child(n + 88) {
+    display: none;
+}
+
+*/

@@ -9,13 +9,13 @@ function printYears() {
 }
 
 function navigateTimetable() {
-    window.api.send('navigate-path', "timetable.cgi?period=6&class=c1&keyt=%YEAR%:none:none:%NAME%");
+    window.api.send('navigate-path', "timetable.cgi?keyt=%YEAR%:%PERIOD%:%GROUP%:%NAME%");
 }
 
 function navigateGrades() {
     window.api.send('navigate-path', "student.cgi?key=%YEAR%");
 }
 
-function navigateInfo() {
+function navigateHome() {
     window.api.send('navigate-path', "personal.cgi?keyp=%YEAR%");
 }
