@@ -157,18 +157,17 @@ function attemptLogin() {
     });
 
     cateWin.setBrowserView(cateScrape);
-    cateScrape.setBounds({ x: 0, y: 92, width: 1150, height: 628 });
+    cateScrape.setBounds({ x: 130, y: 92, width: 1150, height: 628 });
 
     // Autoresize breaks on Windows 10, workaround (May break on secondary monitors)
     cateWin.on("maximize", function() {
-        console.log(screen.getPrimaryDisplay().workAreaSize);
         const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-        cateScrape.setBounds({ x: 0, y: 92, width: width - 130, height: height - 92 });
+        cateScrape.setBounds({ x: 130, y: 92, width: width - 130, height: height - 92 });
     })
 
     cateWin.on("unmaximize", function() {
         [width, height] = cateWin.getSize();
-        cateScrape.setBounds({ x: 0, y: 92, width: width - 130, height: height - 92 });
+        cateScrape.setBounds({ x: 130, y: 92, width: width - 130, height: height - 92 });
     })
 
     cateScrape.setAutoResize({
@@ -195,12 +194,12 @@ function attemptLogin() {
     cateWin.once('ready-to-show', () => {
         cateWin.show();
         // cateScrape.webContents.openDevTools();
-        cateWin.openDevTools();
+        // cateWin.openDevTools();
     })
 
-    const filter = {
-        urls: ['https://cate.doc.ic.ac.uk/timetable.cgi']
-    }
+    // const filter = {
+    //     urls: ['https://cate.doc.ic.ac.uk/timetable.cgi']
+    // }
 
     // cateScrape.webContents.session.webRequest.onBeforeRequest((details, callback) => {
     //     console.log(details);

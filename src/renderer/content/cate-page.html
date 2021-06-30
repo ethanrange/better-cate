@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../stylesheets/style.css">
     <link rel="stylesheet" href="../stylesheets/menu.css">
     <link rel="stylesheet" href="../stylesheets/titlebar.css">
+    <link rel="stylesheet" href="../stylesheets/sidenav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="../scripts/cate.js"></script>
     <script src="../scripts/titlebar.js"></script>
@@ -46,22 +47,51 @@
     <div id="main">
         <!-- <div class="container"> -->
         <nav class="navbar">
-            <span>Better CATe</span>
-            <ul class="nav-links">
+            <span id="title">Better CATe</span>
+            <span id="user">Signed in as:</span>
+            <!-- <ul class="nav-links">
                 <button class="nav-item" onclick=navigateTimetable()>Timetable</button>
                 <button class="nav-item" onclick=navigateGrades()>Grades</button>
                 <button class="nav-item" onclick=navigateHome()>Home</button>
 
                 <div class="dropdown">
-                    <button class="nav-item">Change Year<i class="arrow down"></i></button>
+                    <button class="nav-item">Change Year</button>
                     <div class="dropdown-content">
                         <button onclick=setYear(2020)>2020</button>
                         <button onclick=setYear(2019)>2019</button>
                         <button onclick=setYear(2018)>2018</button>
                     </div>
                 </div>
-            </ul>
+            </ul> -->
         </nav>
+
+        <div class="sidenav">
+            <button class="nav-item" onclick=navigateTimetable()>Timetable</button>
+            <button class="nav-item" onclick=navigateGrades()>Grades</button>
+            <button class="nav-item" onclick=navigateHome()>Home</button>
+
+            <div class="v-dropdown">
+                <button class="nav-item dropdown-btn">Change Year<i class="fa fa-caret-down"></i></button>
+                <div class="dropdown-container">
+                    <button onclick=setYear(2020)>2020</button>
+                    <button onclick=setYear(2019)>2019</button>
+                    <button onclick=setYear(2018)>2018</button>
+                </div>
+            </div>
+
+            <div class="v-dropdown">
+                <button class="nav-item dropdown-btn">Change Class<i class="fa fa-caret-down"></i></button>
+                <div class="dropdown-container">
+                    <button>c1</button>
+                    <button>c2</button>
+                    <button>c3</button>
+                    <button>j1</button>
+                    <button>j2</button>
+                    <button>j3</button>
+                </div>
+            </div>
+        </div>
+
         <!-- </div> -->
 
         <!-- <div class="container">

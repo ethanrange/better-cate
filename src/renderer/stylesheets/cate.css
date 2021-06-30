@@ -5,6 +5,15 @@
 table {
     background-color: #eeeeee;
     table-layout: auto;
+    /* border: none; */
+}
+
+
+/* Rid CATe of that awful blue */
+
+table td[bgcolor="#8ef9f9"],
+table td[bgcolor="#e0f9f9"] {
+    background-color: #eeeeee;
 }
 
 table * {
@@ -19,11 +28,12 @@ body {
     margin: 0;
 }
 
-ul,
+
+/* ul,
 h3,
 body {
     background-color: white;
-}
+} */
 
 
 /* html {
