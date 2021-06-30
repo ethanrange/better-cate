@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, BrowserView } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, BrowserView, screen } = require('electron');
 const keytar = require('keytar')
 
 const request = require('request');
@@ -15,7 +15,7 @@ const menuTemplate = [{
 }]
 
 let loginWin, cateWin, cateScrape;
-let username, year, period, group;
+let username, year, period, group, currUrl;
 
 let cateStyle = fs.readFileSync('./cate.css', "utf-8");
 
@@ -103,15 +103,15 @@ ipcMain.on('handle-titlebar', (event, btnid, winid) => {
 ipcMain.on('navigate-path', (event, path) => {
     // console.log("Leaving: " + cateScrape.webContents.getURL());
 
-    path = path.replace('%YEAR%', year);
-    path = path.replace('%NAME%', username);
-    path = path.replace('%PERIOD%', period);
-    path = path.replace('%GROUP%', group);
-
-    console.log("Loading: https://cate.doc.ic.ac.uk/" + path);
-
     loadPage("https://cate.doc.ic.ac.uk/" + path);
     // cateScrape.webContents.loadURL("https://cate.doc.ic.ac.uk/" + path);
+})
+
+ipcMain.on('set-year', (event, newYear) => {
+    console.log("Setting year to " + newYear);
+    year = newYear;
+
+    loadPage(currUrl);
 })
 
 /* ===================================================
@@ -154,14 +154,27 @@ function attemptLogin() {
     });
 
     cateWin.setBrowserView(cateScrape);
-    cateScrape.setBounds({ x: 70, y: 150, width: 1140, height: 550 });
+    cateScrape.setBounds({ x: 0, y: 92, width: 1150, height: 628 });
+
+    // Autoresize breaks on Windows 10, workaround (May break on secondary monitors)
+    cateWin.on("maximize", function() {
+        console.log(screen.getPrimaryDisplay().workAreaSize);
+        const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+        cateScrape.setBounds({ x: 0, y: 92, width: width - 130, height: height - 92 });
+    })
+
+    cateWin.on("unmaximize", function() {
+        [width, height] = cateWin.getSize();
+        cateScrape.setBounds({ x: 0, y: 92, width: width - 130, height: height - 92 });
+    })
+
     cateScrape.setAutoResize({
-        horizontal: true,
-        vertical: true
+        width: true,
+        height: true
     })
 
     // cateScrape.webContents.loadURL("https://cate.doc.ic.ac.uk/");
-    loadPage('https://cate.doc.ic.ac.uk')
+    initialiseWindow()
 
     if (loginWin) {
         loginWin.close();
@@ -171,7 +184,7 @@ function attemptLogin() {
         cateScrape.webContents.insertCSS(cateStyle, 'utf8');
     })
 
-    cateScrape.webContents.on('new-window', (event, url) => {
+    cateScrape.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
         event.preventDefault();
         loadPage(url);
     })
@@ -179,7 +192,18 @@ function attemptLogin() {
     cateWin.once('ready-to-show', () => {
         cateWin.show();
         // cateScrape.webContents.openDevTools();
+        // cateWin.openDevTools();
     })
+
+    const filter = {
+        urls: ['https://cate.doc.ic.ac.uk/timetable.cgi']
+    }
+
+    // cateScrape.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+    //     console.log(details);
+    //     callback({ requestHeaders: details.requestHeaders })
+    // })
+
 }
 
 function attemptSignup() {
@@ -207,26 +231,29 @@ function attemptSignup() {
 }
 
 function loadPage(url) {
+    currUrl = url;
+
+    url = url.replace('%YEAR%', year);
+    url = url.replace('%NAME%', username);
+    url = url.replace('%PERIOD%', period);
+    url = url.replace('%GROUP%', group);
+
+    console.log("Loading: " + url);
+
     getCredentials().then((account) => {
         request(url, function(error, response, body) {
             if (!error) {
-                // Set year
-                let query = response.request.uri.query;
-                year = parseInt(query.split('=').pop().split(':')[0]);
-
                 let pathname = response.request.uri.pathname;
                 let page = pathname.substring(1).split('.')[0];
 
                 if (['student', 'timetable', 'personal'].includes(page)) {
-                    [modified, foundPeriod, foundGroup] = scraper.scrape(body, page);
+                    modified = scraper.scrape(body, page);
 
-                    if (foundPeriod) {
-                        period = foundPeriod;
+                    if (!modified) {
+                        modified = body;
                     }
 
-                    if (foundGroup) {
-                        group = foundGroup;
-                    }
+                    modified = '<base href="https://cate.doc.ic.ac.uk/" target="_blank">' + modified;
 
                     // Load page into WindowView
                     cateScrape.webContents.loadURL("data:text/html;base64;charset=utf-8," + Buffer.from(modified).toString('base64'));
@@ -253,4 +280,20 @@ function getCredentials() {
     })
 
     return account;
+}
+
+function initialiseWindow() {
+    getCredentials().then((account) => {
+        request("https://cate.doc.ic.ac.uk", function(error, response, body) {
+            if (!error) {
+                // Set year
+                let query = response.request.uri.query;
+                year = parseInt(query.split('=').pop().split(':')[0]);
+
+                [period, group] = scraper.setParameters(body);
+
+                loadPage('https://cate.doc.ic.ac.uk/personal.cgi?keyp=%YEAR%:%NAME%')
+            }
+        }).auth(account.account, account.password);
+    })
 }

@@ -1,41 +1,54 @@
 const cheerio = require('cheerio');
 
 module.exports = {
-    scrape: scrape
+    scrape: scrape,
+    setParameters: setParameters
 };
 
 function scrape(body, page) {
     body = body.replace(/&nbsp;/g, "")
     const $ = cheerio.load(body);
-
-    let modified = '<base href="https://cate.doc.ic.ac.uk/" target="_blank">'
-    let period;
-
     switch (page) {
         case 'student':
             {
-                modified += String($("body > ul:nth-child(9) > table > tbody").html());
-                break;
+                let student = $("body > ul:nth-child(9) > table > tbody");
+
+                if (!student.length) {
+                    return null;
+                }
+
+                return String(student.html());
             }
         case 'timetable':
             {
-                $('img').remove();
-                modified += '<table>'
+                // $('img').remove();
 
-                modified += String($('body > table:nth-child(3)').html()) + '</table>';
-                break;
+                let timetable = $('body > table:nth-child(3)');
+
+                if (!timetable.length) {
+                    return null;
+                }
+
+                return '<table>' + timetable.html() + '</table>';
             }
         case 'personal':
             {
-                period = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(6) > td:nth-child(1) > input[checked]')[0].attribs.value
+                // let selector = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(3) > table > tbody > tr > td');
+                let selector = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3)');
+                let personal = $('body > form > table > tbody > tr:nth-child(1) > td:nth-child(2)');
 
-                modified += String($('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(3) > table > tbody > tr > td').html());
-                modified += String($('body > form > table > tbody > tr:nth-child(1) > td:nth-child(2) > table > tbody'));
-                break;
+                // selector.children('form').attr('action', "@@request-timetable")
+                // selector.children('form').attr('method', "post")
+
+                if (!selector.length || !personal.length) {
+                    return null;
+                }
+
+                return selector.html() + '<br>' + personal.html();
             }
     }
 
-    return [modified, 1, 'c1'];
+    return modified;
 
     // const scrapedData = [];
     // const tableHeaders = [];
@@ -60,4 +73,13 @@ function scrape(body, page) {
     // });
 
     // console.log(scrapedData);
+}
+
+function setParameters(body) {
+    const $ = cheerio.load(body);
+
+    let period = 1; //$('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(6) > td:nth-child(1) > input[checked]')[0].attribs.value
+    let group = 'c1';
+
+    return [period, group];
 }
