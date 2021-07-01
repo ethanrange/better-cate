@@ -1,3 +1,11 @@
+function setDetails(...args) {
+    document.getElementById('user').innerHTML = args.join(' | ');
+    console.log("Setting details!");
+}
+
+window.api.receive('await-details', setDetails);
+window.api.send('establish-catewin');
+
 // Send API request for navigation to particular page
 
 function navigateTimetable() {

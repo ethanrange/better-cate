@@ -17,6 +17,7 @@ const menuTemplate = [{
 
 let loginWin, cateWin, cateScrape;
 let username, year, period, group, currUrl;
+let cateWinIPC;
 
 let cateStyle = fs.readFileSync(path.join(path.dirname(__dirname), 'renderer', 'resources', 'injected_style', 'cate.css'), "utf-8");
 
@@ -64,7 +65,7 @@ ipcMain.on('request-accounts', (event, ...args) => {
     creds.then((credentials) => {
         let accounts = credentials.map(x => x.account);
 
-        event.sender.send('request-accounts', accounts);
+        event.reply('request-accounts', accounts);
     })
 })
 
@@ -72,7 +73,7 @@ ipcMain.on('request-deletion', (event, id) => {
     let deletion = keytar.deletePassword(app.name, id);
 
     deletion.then((success) => {
-        event.sender.send('request-deletion', success, id);
+        event.reply('request-deletion', success, id);
     })
 })
 
@@ -115,6 +116,10 @@ ipcMain.on('set-year', (event, newYear) => {
     loadPage(currUrl);
 })
 
+ipcMain.on('establish-catewin', (event) => {
+    cateWinIPC = event.sender;
+})
+
 /* ===================================================
  * Functions
  * =================================================== */
@@ -136,7 +141,7 @@ function attemptLogin() {
         webPreferences: {
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: path.join(path.dirname(__dirname), 'preload', 'preload.js')
+            preload: path.join(path.dirname(__dirname), 'preload', 'catewin_preload.js')
         },
         show: false,
         frame: false
@@ -146,7 +151,6 @@ function attemptLogin() {
     Menu.setApplicationMenu(menu);
 
     // cateWin.loadURL("https://cate.doc.ic.ac.uk")
-    console.log(path.join(path.dirname(__dirname), 'renderer', 'content', 'cate-page.html'));
     cateWin.loadFile(path.join(path.dirname(__dirname), 'renderer', 'content', 'cate-page.html'));
 
     cateScrape = new BrowserView({
@@ -160,6 +164,7 @@ function attemptLogin() {
     cateScrape.setBounds({ x: 130, y: 92, width: 1150, height: 628 });
 
     // Autoresize breaks on Windows 10, workaround (May break on secondary monitors)
+    // TODO: Fix to work on secondary monitors
     cateWin.on("maximize", function() {
         const { width, height } = screen.getPrimaryDisplay().workAreaSize;
         cateScrape.setBounds({ x: 130, y: 92, width: width - 130, height: height - 92 });
@@ -194,7 +199,7 @@ function attemptLogin() {
     cateWin.once('ready-to-show', () => {
         cateWin.show();
         // cateScrape.webContents.openDevTools();
-        // cateWin.openDevTools();
+        cateWin.openDevTools();
     })
 
     // const filter = {
@@ -215,7 +220,7 @@ function attemptSignup() {
         webPreferences: {
             contextIsolation: true,
             enableRemoteModule: false,
-            preload: path.join(path.dirname(__dirname), 'preload', 'preload.js')
+            preload: path.join(path.dirname(__dirname), 'preload', 'login_preload.js')
         },
         show: false,
         frame: false
@@ -233,6 +238,15 @@ function attemptSignup() {
 }
 
 function loadPage(url) {
+    // Send details to CATeWin when defined
+    (async() => {
+        while (!cateWinIPC) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        cateWinIPC.send('await-details', username, year, period, group);
+    })();
+
     currUrl = url;
 
     url = url.replace('%YEAR%', year);

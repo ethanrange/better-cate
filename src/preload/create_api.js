@@ -3,20 +3,19 @@ const {
     ipcRenderer
 } = require("electron");
 
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
+const VALID_SEND = ['store-creds', 'request-accounts', 'request-deletion', 'attempt-login', 'handle-titlebar', 'navigate-path', 'set-year', 'establish-catewin'];
+const VALID_REC = ['request-accounts', 'request-deletion', 'await-details'];
+
 contextBridge.exposeInMainWorld(
     "api", {
         send: (channel, ...args) => {
             // whitelist channels
-            let validChannels = ['store-creds', 'request-accounts', 'request-deletion', 'attempt-login', 'handle-titlebar', 'navigate-path', 'set-year'];
-            if (validChannels.includes(channel)) {
+            if (VALID_SEND.includes(channel)) {
                 ipcRenderer.send(channel, ...args);
             }
         },
         receive: (channel, func) => {
-            let validChannels = ['request-accounts', 'request-deletion'];
-            if (validChannels.includes(channel)) {
+            if (VALID_REC.includes(channel)) {
                 // Deliberately strip event as it includes `sender` 
                 ipcRenderer.on(channel, (event, ...args) => func(...args));
             }
