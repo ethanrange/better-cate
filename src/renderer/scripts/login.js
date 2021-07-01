@@ -13,11 +13,13 @@ function handleCredentials() {
     window.api.send('store-creds', uname, pwd);
 }
 
+// Request list of stored accounts and await response
 function makeAccountList() {
     window.api.send('request-accounts');
     window.api.receive('request-accounts', insertAccounts);
 }
 
+// Insert received list of accounts into HTML Div
 function insertAccounts(accounts) {
     ul = document.createElement('ul');
     document.getElementById('accounts').appendChild(ul);
@@ -54,11 +56,13 @@ function insertAccounts(accounts) {
     });
 }
 
+// Send API request for account deletion
 function requestDeletion(id) {
     window.api.send('request-deletion', id);
     window.api.receive('request-deletion', handleDeletion);
 }
 
+// Handle API response for account deletion
 function handleDeletion(success, id) {
     if (success) {
         document.getElementById(id).remove();
@@ -67,6 +71,7 @@ function handleDeletion(success, id) {
     }
 }
 
+// Send API request to login as selected user
 function selectLogin(id) {
     window.api.send('attempt-login', id);
 }

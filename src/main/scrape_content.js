@@ -5,45 +5,46 @@ module.exports = {
     setParameters: setParameters
 };
 
+// Scrape element from page depending on page type
 function scrape(body, page) {
+    // Replace whitespaces
     body = body.replace(/&nbsp;/g, "")
     const $ = cheerio.load(body);
+
     switch (page) {
         case 'student':
             {
+                // Select Grades table
                 let student = $("body > ul:nth-child(9) > table > tbody");
 
-                if (!student.length) {
-                    return null;
-                }
-
-                return String(student.html());
+                // If element is present, return HTML
+                return student.length ? String(student.html()) : null;
             }
         case 'timetable':
             {
+                // Remove images from page
                 // $('img').remove();
 
+                // Select timetable element
                 let timetable = $('body > table:nth-child(3)');
 
-                if (!timetable.length) {
-                    return null;
-                }
-
-                return '<table>' + timetable.html() + '</table>';
+                // If element is present, return HTML
+                return timetable.length ? '<table>' + timetable.html() + '</table>' : null;
             }
         case 'personal':
             {
-                // let selector = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(3) > table > tbody > tr > td');
-                let selector = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3)');
+                // Select personal info element
                 let personal = $('body > form > table > tbody > tr:nth-child(1) > td:nth-child(2)');
 
-                // selector.children('form').attr('action', "@@request-timetable")
-                // selector.children('form').attr('method', "post")
+                // Select class selector element
+                let selector = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3)');
 
+                // If either elements are not present, return null
                 if (!selector.length || !personal.length) {
                     return null;
                 }
 
+                // Else return joined HTML
                 return selector.html() + '<br>' + personal.html();
             }
     }
@@ -75,6 +76,7 @@ function scrape(body, page) {
     // console.log(scrapedData);
 }
 
+// Set period and group parameters by scraping homepage
 function setParameters(body) {
     const $ = cheerio.load(body);
 

@@ -18,7 +18,7 @@ const menuTemplate = [{
 let loginWin, cateWin, cateScrape;
 let username, year, period, group, currUrl;
 
-let cateStyle = fs.readFileSync(path.join(path.dirname(__dirname), 'renderer', 'stylesheets', 'cate.css'), "utf-8");
+let cateStyle = fs.readFileSync(path.join(path.dirname(__dirname), 'renderer', 'resources', 'injected_style', 'cate.css'), "utf-8");
 
 /* ===================================================
  * App listeners
