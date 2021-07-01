@@ -1,6 +1,16 @@
-function setDetails(...args) {
-    document.getElementById('user').innerHTML = args.join(' | ');
-    console.log("Setting details!");
+function setDetails(classes, ...details) {
+    document.getElementById('user').innerHTML = details.join(' | ');
+
+    let groups = document.getElementById('groups');
+
+    classes.forEach(function(item) {
+        let groupButton = document.createElement('button');
+
+        groupButton.onclick = function() { setGroup(item) };
+        groupButton.innerHTML = item;
+
+        groups.appendChild(groupButton);
+    });
 }
 
 window.api.receive('await-details', setDetails);
@@ -24,4 +34,10 @@ function navigateHome() {
 
 function setYear(year) {
     window.api.send('set-year', year);
+}
+
+// Set group variable
+
+function setGroup(group) {
+    window.api.send('set-group', group);
 }

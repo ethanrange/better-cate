@@ -80,8 +80,8 @@ function scrape(body, page) {
 function setParameters(body) {
     const $ = cheerio.load(body);
 
-    let period = 1; //$('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(6) > td:nth-child(1) > input[checked]')[0].attribs.value
-    let group = 'c1';
+    let period = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(6) > td:nth-child(1) > input[checked]')[0].attribs.value
+    let group = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(3) > table > tbody > tr > td > table > tbody > tr > td > button[style]')[0].attribs.value;
 
     return [period, group];
 }

@@ -17,6 +17,7 @@ const menuTemplate = [{
 
 let loginWin, cateWin, cateScrape;
 let username, year, period, group, currUrl;
+let groups;
 let cateWinIPC;
 
 let cateStyle = fs.readFileSync(path.join(path.dirname(__dirname), 'renderer', 'resources', 'injected_style', 'cate.css'), "utf-8");
@@ -116,6 +117,13 @@ ipcMain.on('set-year', (event, newYear) => {
     loadPage(currUrl);
 })
 
+ipcMain.on('set-group', (event, newGroup) => {
+    console.log("Setting group to " + newGroup);
+    group = newGroup;
+
+    loadPage(currUrl);
+})
+
 ipcMain.on('establish-catewin', (event) => {
     cateWinIPC = event.sender;
 })
@@ -187,7 +195,7 @@ function attemptLogin() {
         loginWin.close();
     }
 
-    cateScrape.webContents.on('dom-ready', () => {
+    cateScrape.webContents.on('did-finish-load', () => {
         cateScrape.webContents.insertCSS(cateStyle, 'utf8');
     })
 
@@ -244,7 +252,7 @@ function loadPage(url) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        cateWinIPC.send('await-details', username, year, period, group);
+        cateWinIPC.send('await-details', groups, username, year, period, group);
     })();
 
     currUrl = url;
@@ -309,6 +317,12 @@ function initialiseWindow() {
                 [period, group] = scraper.setParameters(body);
 
                 loadPage('https://cate.doc.ic.ac.uk/personal.cgi?keyp=%YEAR%:%NAME%')
+            }
+        }).auth(account.account, account.password);
+
+        request("https://dbc.doc.ic.ac.uk/api/teachdbs/views/curr/classes", function(error, response, body) {
+            if (!error) {
+                groups = JSON.parse(body).map(c => c.class);
             }
         }).auth(account.account, account.password);
     })
