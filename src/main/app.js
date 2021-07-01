@@ -17,7 +17,7 @@ const menuTemplate = [{
 
 let loginWin, cateWin, cateScrape;
 let username, year, period, group, currUrl;
-let groups;
+let groups, years;
 let cateWinIPC;
 
 let cateStyle = fs.readFileSync(path.join(path.dirname(__dirname), 'renderer', 'resources', 'injected_style', 'cate.css'), "utf-8");
@@ -252,7 +252,7 @@ function loadPage(url) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        cateWinIPC.send('await-details', groups, username, year, period, group);
+        cateWinIPC.send('await-details', years, groups, username, year, period, group);
     })();
 
     currUrl = url;
@@ -323,6 +323,13 @@ function initialiseWindow() {
         request("https://dbc.doc.ic.ac.uk/api/teachdbs/views/curr/classes", function(error, response, body) {
             if (!error) {
                 groups = JSON.parse(body).map(c => c.class);
+            }
+        }).auth(account.account, account.password);
+
+        request("https://dbc.doc.ic.ac.uk/api/teachdbs/views", function(error, response, body) {
+            if (!error) {
+                years = JSON.parse(body).map(v => '20' + v.view.slice(0, 2)).filter(Number).reverse();
+                years.pop();
             }
         }).auth(account.account, account.password);
     })

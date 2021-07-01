@@ -1,15 +1,28 @@
-function setDetails(classes, ...details) {
+function setDetails(years, groups, ...details) {
     document.getElementById('user').innerHTML = details.join(' | ');
 
-    let groups = document.getElementById('groups');
+    let yearsDiv = document.getElementById('years');
+    yearsDiv.innerHTML = '';
 
-    classes.forEach(function(item) {
+    years.forEach(function(item) {
+        let yearButton = document.createElement('button');
+
+        yearButton.onclick = function() { setYear(item) };
+        yearButton.innerHTML = item;
+
+        yearsDiv.appendChild(yearButton);
+    });
+
+    let groupsDiv = document.getElementById('groups');
+    groupsDiv.innerHTML = '';
+
+    groups.forEach(function(item) {
         let groupButton = document.createElement('button');
 
         groupButton.onclick = function() { setGroup(item) };
         groupButton.innerHTML = item;
 
-        groups.appendChild(groupButton);
+        groupsDiv.appendChild(groupButton);
     });
 }
 

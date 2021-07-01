@@ -17,6 +17,8 @@ function scrape(body, page) {
                 // Select Grades table
                 let student = $("body > ul:nth-child(9) > table > tbody");
 
+                printScrapedData($);
+
                 // If element is present, return HTML
                 return student.length ? String(student.html()) : null;
             }
@@ -50,30 +52,6 @@ function scrape(body, page) {
     }
 
     return modified;
-
-    // const scrapedData = [];
-    // const tableHeaders = [];
-    // $("body > ul:nth-child(9) > table > tbody > tr > td > table > tbody > tr").each((index, element) => {
-    //     if (index === 0) {
-    //         const ths = $(element).find("th");
-    //         $(ths).each((i, element) => {
-    //             tableHeaders.push(
-    //                 $(element)
-    //                 .text()
-    //                 .toLowerCase()
-    //             );
-    //         });
-    //         return true;
-    //     }
-    //     const tds = $(element).find("td");
-    //     const tableRow = {};
-    //     $(tds).each((i, element) => {
-    //         tableRow[tableHeaders[i]] = $(element).text();
-    //     });
-    //     scrapedData.push(tableRow);
-    // });
-
-    // console.log(scrapedData);
 }
 
 // Set period and group parameters by scraping homepage
@@ -84,4 +62,39 @@ function setParameters(body) {
     let group = $('body > form > table > tbody > tr:nth-child(2) > td:nth-child(1) > ul:nth-child(3) > form > table > tbody > tr > td:nth-child(3) > table > tbody > tr > td > table > tbody > tr > td > button[style]')[0].attribs.value;
 
     return [period, group];
+}
+
+function printScrapedData($) {
+    let scrapedData = [];
+    let tableHeaders = [];
+    $("body > ul:nth-child(9) > table > tbody > tr > td > table > tbody > tr").each((index, element) => {
+        if (index === 0) {
+            const ths = $(element).find("th");
+            $(ths).each((i, element) => {
+                tableHeaders.push(
+                    $(element)
+                    .text()
+                    .toLowerCase()
+                );
+            });
+            return true;
+        }
+        const tds = $(element).find("td");
+        const tableRow = {};
+        $(tds).each((i, element) => {
+            tableRow[tableHeaders[i]] = $(element).text();
+        });
+        scrapedData.push(tableRow);
+    });
+
+    scrapedData = scrapedData.filter(entry => ['T', 'OT', 'CW'].includes(entry.type) && entry.grade).map(convertGradeScrape);
+
+    console.log(scrapedData);
+}
+
+function convertGradeScrape({ exercise, title, grade }) {
+    // Split on both ' ' and '/'
+    let [mark, max, letter] = grade.split(/[\/ ]/);
+    console.log([mark, max, letter]);
+    return { exercise, title, mark, max, letter };
 }
