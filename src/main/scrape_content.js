@@ -47,7 +47,7 @@ function scrape(body, page) {
                 }
 
                 // Else return joined HTML
-                return selector.html() + '<br>' + personal.html();
+                return personal.html() + '<br>' + selector.html();
             }
     }
 

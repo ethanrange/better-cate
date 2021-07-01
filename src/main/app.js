@@ -124,6 +124,13 @@ ipcMain.on('set-group', (event, newGroup) => {
     loadPage(currUrl);
 })
 
+ipcMain.on('set-period', (event, newPeriod) => {
+    console.log("Setting period to " + newPeriod);
+    period = newPeriod;
+
+    loadPage(currUrl);
+})
+
 ipcMain.on('establish-catewin', (event) => {
     cateWinIPC = event.sender;
 })
@@ -207,7 +214,7 @@ function attemptLogin() {
     cateWin.once('ready-to-show', () => {
         cateWin.show();
         // cateScrape.webContents.openDevTools();
-        cateWin.openDevTools();
+        // cateWin.openDevTools();
     })
 
     // const filter = {
@@ -246,13 +253,16 @@ function attemptSignup() {
 }
 
 function loadPage(url) {
+    let pathname = url.split('?')[0].split('/').pop();
+    let page = pathname.split('.')[0];
+
     // Send details to CATeWin when defined
     (async() => {
         while (!cateWinIPC) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        cateWinIPC.send('await-details', years, groups, username, year, period, group);
+        cateWinIPC.send('await-details', years, groups, page, username, year, period, group);
     })();
 
     currUrl = url;
@@ -267,9 +277,6 @@ function loadPage(url) {
     getCredentials().then((account) => {
         request(url, function(error, response, body) {
             if (!error) {
-                let pathname = response.request.uri.pathname;
-                let page = pathname.substring(1).split('.')[0];
-
                 if (['student', 'timetable', 'personal'].includes(page)) {
                     modified = scraper.scrape(body, page);
 

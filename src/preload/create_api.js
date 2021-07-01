@@ -3,7 +3,7 @@ const {
     ipcRenderer
 } = require("electron");
 
-const VALID_SEND = ['store-creds', 'request-accounts', 'request-deletion', 'attempt-login', 'handle-titlebar', 'navigate-path', 'set-year', 'establish-catewin', 'set-group'];
+const VALID_SEND = ['store-creds', 'request-accounts', 'request-deletion', 'attempt-login', 'handle-titlebar', 'navigate-path', 'set-year', 'establish-catewin', 'set-group', 'set-period'];
 const VALID_REC = ['request-accounts', 'request-deletion', 'await-details'];
 
 contextBridge.exposeInMainWorld(
